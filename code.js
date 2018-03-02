@@ -125,7 +125,7 @@ function NajdiVoznjo(avto){
 	let cakanje = -avto.voznja.zc + CAS + avtoDoPotnika;
 	if(cakanje > 0) cakanje = 0;
 	avto.preostaliCasVoznje = avto.voznja.d + avtoDoPotnika - cakanje;
-	// 
+	//
 	avto.records.push(voznje[index]);
 	console.table(voznje);
 	voznje.splice(index,1);
@@ -134,7 +134,7 @@ function NajdiVoznjo(avto){
 
 
 function IzracunajTocke(voznja, avto, CAS){
-	let avtoDoPotnika = avto.razdaljaDoPotnika(voznja);	
+	let avtoDoPotnika = avto.razdaljaDoPotnika(voznja);
 	if((voznja.kc-CAS)-avtoDoPotnika-voznja.d >= 0){ //a lahko pridem do stranke
 
 		let cakanje = -avto.voznja.zc + CAS + avtoDoPotnika;
@@ -159,4 +159,6 @@ function Output(){
 	document.getElementById('text').innerHTML = text;
 }
 
+
+//izpiši rezultate
 Output();
