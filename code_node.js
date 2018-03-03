@@ -59,50 +59,22 @@ class Simulacija{
   		let avto = this.avti[a];
 
   		// Če avto nima stranke jo poišči.
-  		if(!avto.voznja) this.najdiVoznjo(avto);
+  		if(!avto.voznja) avto.najdiVoznjo(this);
 
+      //če avto ima stranko, ga premakni naprej
   		if(avto.voznja){
   			avto.preostaliCasVoznje--;
+        //ko pride na cilj
   			if(avto.preostaliCasVoznje <= 0) {
   				avto.x = avto.voznja.x2;
   				avto.y = avto.voznja.y2;
   				avto.voznja = false;
-  				this.najdiVoznjo(avto);
+  				avto.najdiVoznjo(this);
   			}
   		}
   	}
 
   	this.CAS++;
-  }
-
-  najdiVoznjo(avto){
-    let maxTocke = 0;
-  	let index = -1;
-  	for(let v=0; v<this.voznje.length; v++){
-  		let voznja = this.voznje[v];
-  		voznja.tocke = avto.izracunajTocke(voznja, this);
-  		if(voznja.tocke > maxTocke){
-  			maxTocke = voznja.tocke;
-  			index = v;
-  		}
-  	}
-
-  	if(index == -1) return; // ni najdel nobene voznje
-
-    // //preveri ce lahko vzames voznjo
-    // if(avto.razdaljaDoPotnika(this.voznje[index]) > this.voznje[index].kc){
-    //   return;
-    // }
-
-  	avto.nastaviVoznjo(this.voznje[index]);
-
-  	// računanje dolžine vožnje
-  	avto.izracunajCasVoznje(avto.voznja, this.CAS);
-
-  	//console.table(this.voznje);
-
-    //izbrisi voznjo iz seznama vozenj, ki jih mormo se opraviti
-  	this.voznje.splice(index,1);
   }
 
   output(){
@@ -180,5 +152,35 @@ class Avto{
     }
 
     return tocke;
+  }
+
+  najdiVoznjo(simulacija){
+    let maxTocke = 0;
+  	let index = -1;
+  	for(let v=0; v<simulacija.voznje.length; v++){
+  		let voznja = simulacija.voznje[v];
+  		voznja.tocke = this.izracunajTocke(voznja, simulacija);
+  		if(voznja.tocke > maxTocke){
+  			maxTocke = voznja.tocke;
+  			index = v;
+  		}
+  	}
+
+  	if(index == -1) return; // ni najdel nobene voznje
+
+    // //preveri ce lahko vzames voznjo
+    // if(this.razdaljaDoPotnika(simulacija.voznje[index]) > simulacija.voznje[index].kc){
+    //   return;
+    // }
+
+  	this.nastaviVoznjo(simulacija.voznje[index]);
+
+  	// računanje dolžine vožnje
+  	this.izracunajCasVoznje(this.voznja, simulacija.CAS);
+
+  	//console.table(simulacija.voznje);
+
+    //izbrisi voznjo iz seznama vozenj, ki jih mormo se opraviti
+  	simulacija.voznje.splice(index,1);
   }
 }
