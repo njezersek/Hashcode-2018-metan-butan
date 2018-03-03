@@ -154,12 +154,18 @@ class Avto{
     return tocke;
   }
 
+  ovrednotiVoznjo(voznja, simulacija){
+    let tocke = this.izracunajTocke(voznja, simulacija);
+    let razdaljaDoPotnika = this.razdaljaDoPotnika();
+    return tocke/razdaljaDoPotnika;
+  }
+
   najdiVoznjo(simulacija){
     let maxTocke = 0;
   	let index = -1;
   	for(let v=0; v<simulacija.voznje.length; v++){
   		let voznja = simulacija.voznje[v];
-  		voznja.tocke = this.izracunajTocke(voznja, simulacija);
+  		voznja.tocke = this.ovrednotiVoznjo(voznja, simulacija);
   		if(voznja.tocke > maxTocke){
   			maxTocke = voznja.tocke;
   			index = v;
@@ -168,17 +174,10 @@ class Avto{
 
   	if(index == -1) return; // ni najdel nobene voznje
 
-    // //preveri ce lahko vzames voznjo
-    // if(this.razdaljaDoPotnika(simulacija.voznje[index]) > simulacija.voznje[index].kc){
-    //   return;
-    // }
-
   	this.nastaviVoznjo(simulacija.voznje[index]);
 
   	// računanje dolžine vožnje
   	this.izracunajCasVoznje(this.voznja, simulacija.CAS);
-
-  	//console.table(simulacija.voznje);
 
     //izbrisi voznjo iz seznama vozenj, ki jih mormo se opraviti
   	simulacija.voznje.splice(index,1);
