@@ -48,7 +48,7 @@ class Simulacija{
   }
 
   run(){
-    for(let t=0; t<this.T; t++){
+    for(let t=0; t<this.T-1; t++){
     	this.tick();
     }
     this.output();
@@ -89,12 +89,17 @@ class Simulacija{
 
   	if(index == -1) return; // ni najdel nobene voznje
 
+    // //preveri ce lahko vzames voznjo
+    // if(avto.razdaljaDoPotnika(this.voznje[index]) > this.voznje[index].kc){
+    //   return;
+    // }
+
   	avto.nastaviVoznjo(this.voznje[index]);
 
   	// računanje dolžine vožnje
   	avto.izracunajCasVoznje(avto.voznja, this.CAS);
 
-  	console.table(this.voznje);
+  	//console.table(this.voznje);
 
     //izbrisi voznjo iz seznama vozenj, ki jih mormo se opraviti
   	this.voznje.splice(index,1);
@@ -152,7 +157,7 @@ class Avto{
     let razdaljaDoPotnika = this.razdaljaDoPotnika(voznja);
   	let cakanjeNaPotnika = voznja.zc - CAS;
     let potDoPotnika = Math.max(razdaljaDoPotnika, cakanjeNaPotnika);
-  	this.preostaliCasVoznje = voznja.d + potDoPotnika;
+  	return this.preostaliCasVoznje = voznja.d + potDoPotnika;
   }
 
   nastaviVoznjo(voznja){
