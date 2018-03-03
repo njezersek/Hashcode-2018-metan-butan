@@ -117,7 +117,7 @@ class Simulacija{
   		text += "\n";
   	}
 
-    fs.appendFile('outputs/'+inputFile+'.txt', text, function (err) {
+    fs.writeFile('outputs/'+inputFile+'.txt', text, function (err) {
       if (err) throw err;
       console.log(text + '\n\nsharnjeno v outputs/'+inputFile+'.txt');
       console.log("Tocke:" + sestevekTock);
