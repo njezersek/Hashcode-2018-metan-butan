@@ -4,7 +4,7 @@
   run:
   >node code_node.js <ime input datoteke brez koncnice>
 
-
+  v Avto.ovrednotiVoznjo() nastavi pravi način vrednotenja poti
 */
 
 var inputFile = process.argv[2];
