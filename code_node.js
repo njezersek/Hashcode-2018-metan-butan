@@ -9,8 +9,6 @@
 
 var inputFile = process.argv[2];
 
-inputFile = "d_metropolis";
-
 var fs = require('fs');
 
 fs.readFile('inputs/'+inputFile+'.in', parse);
