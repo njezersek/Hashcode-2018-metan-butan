@@ -55,7 +55,7 @@ class Simulacija{
     console.log("ZACETEK SIMULACIJE: " + inputFile);
     for(let t=0; t<this.T-1; t++){
     	this.tick();
-      if(t%Math.round((this.T-1)/100) == 0)console.log(((t/(this.T-1))*100).toFixed(0) + "%");
+      console.log(((t/(this.T-1))*100).toFixed(2) + "%");
     }
     this.output();
   }
@@ -98,8 +98,7 @@ class Simulacija{
     fs.writeFile('outputs/'+inputFile+'.txt', text, function (err) {
       if (err) throw err;
       console.log(text + '\n\nsharnjeno v outputs/'+inputFile+'.txt');
-      let tocke = sestevekTock.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      console.log("Tocke:" + tocke);
+      console.log("Tocke:" + sestevekTock.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     });
 
   }
@@ -159,8 +158,7 @@ class Avto{
     }
 
     //če na cilj prideč prepozno dobiš NIČ točk
-    let casVoznje = this.izracunajCasVoznje(voznja, simulacija.CAS);
-    if(simulacija.CAS + casVoznje > voznja.kc){
+    if(simulacija.CAS + this.izracunajCasVoznje(voznja, simulacija.CAS) > voznja.kc){
       tocke = 0;
     }
 
