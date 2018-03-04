@@ -3,6 +3,8 @@
 
   run:
   >node code_node.js <ime input datoteke brez koncnice>
+
+
 */
 
 var inputFile = process.argv[2];
@@ -48,8 +50,10 @@ class Simulacija{
   }
 
   run(){
+    console.log("ZACETEK SIMULACIJE: " + inputFile);
     for(let t=0; t<this.T-1; t++){
     	this.tick();
+      console.log(((t/(this.T-1))*100).toFixed(2) + "%");
     }
     this.output();
   }
@@ -92,7 +96,7 @@ class Simulacija{
     fs.writeFile('outputs/'+inputFile+'.txt', text, function (err) {
       if (err) throw err;
       console.log(text + '\n\nsharnjeno v outputs/'+inputFile+'.txt');
-      console.log("Tocke:" + sestevekTock);
+      console.log("Tocke:" + sestevekTock.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     });
 
   }
@@ -125,10 +129,15 @@ class Avto{
 		return Math.abs(this.x - voznja.x1) + Math.abs(this.y - voznja.y1);
 	}
 
-  izracunajCasVoznje(voznja, CAS){
+  izracunajCasDoPotnika(voznja, CAS){
     let razdaljaDoPotnika = this.razdaljaDoPotnika(voznja);
-  	let cakanjeNaPotnika = voznja.zc - CAS;
+    let cakanjeNaPotnika = voznja.zc - CAS;
     let potDoPotnika = Math.max(razdaljaDoPotnika, cakanjeNaPotnika);
+    return potDoPotnika;
+  }
+
+  izracunajCasVoznje(voznja, CAS){
+    let potDoPotnika = this.izracunajCasDoPotnika(voznja, CAS);
   	return this.preostaliCasVoznje = voznja.d + potDoPotnika;
   }
 
@@ -156,8 +165,25 @@ class Avto{
 
   ovrednotiVoznjo(voznja, simulacija){
     let tocke = this.izracunajTocke(voznja, simulacija);
-    let razdaljaDoPotnika = this.razdaljaDoPotnika();
-    return tocke/razdaljaDoPotnika;
+    let razdaljaDoPotnika = this.razdaljaDoPotnika(voznja);
+    let casDoPotnika = this.izracunajCasDoPotnika(voznja, simulacija.CAS);
+    let dolzinaPoti = voznja.d;
+    let cakanjeNaPotnika = voznja.zc - simulacija.CAS;
+
+    //metropolis - 11,782,737
+    //high_bonus - 21,457,613
+    if(casDoPotnika+razdaljaDoPotnika < voznja.kc){
+      return  tocke/(dolzinaPoti*casDoPotnika);
+    }
+    else{
+      return 0;
+    }
+
+
+    // should_be_easy - 176,820
+    //no_hurry - 15,790,930
+    //metropolis - 9,866,810
+    return tocke/casDoPotnika;
   }
 
   najdiVoznjo(simulacija){
@@ -174,7 +200,11 @@ class Avto{
 
   	if(index == -1) return; // ni najdel nobene voznje
 
-  	this.nastaviVoznjo(simulacija.voznje[index]);
+    let izbranaVoznja = simulacija.voznje[index];
+
+    izbranaVoznja.tocke = this.izracunajTocke(izbranaVoznja, simulacija);
+
+  	this.nastaviVoznjo(izbranaVoznja);
 
   	// računanje dolžine vožnje
   	this.izracunajCasVoznje(this.voznja, simulacija.CAS);
